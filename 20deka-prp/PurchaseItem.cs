@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwentyDeka
 {
-    class PurchaseItem
+    public class PurchaseItem
     {
         public const int ITEM_ID_MAX_LENGTH = 32;
 

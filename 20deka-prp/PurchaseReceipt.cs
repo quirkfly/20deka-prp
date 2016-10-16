@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwentyDeka
 {
-    class PurchaseReceipt
+    public class PurchaseReceipt
     {
         public uint sellerId { get; set; }
         public uint sellerBranchId { get; set; }
@@ -32,6 +32,7 @@ namespace TwentyDeka
             }
         }
 
+        override
         public string ToString()
         {
             string purchaseReceipt = String.Format("{0}{1}", this.sellerId.ToString().PadLeft(10, '0'), this.sellerBranchId.ToString().PadLeft(10, '0'));

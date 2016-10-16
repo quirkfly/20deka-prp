@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TwentyDeka
 {
-    class PurchaseResult
+    public class PurchaseResult
     {
         public Bitmap purchaseQRCode { get; set; }
 

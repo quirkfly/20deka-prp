@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TwentyDeka
 {
-    class InvalidPurchaseItemIdException : Exception
+    public class InvalidPurchaseItemIdException : Exception
     {
         public InvalidPurchaseItemIdException(string message)
             : base(message)
@@ -14,7 +14,7 @@ namespace TwentyDeka
         }
     }
 
-    class InvalidSellerIdException : Exception
+    public class InvalidSellerIdException : Exception
     {
         public InvalidSellerIdException(string message)
             : base(message)
@@ -22,7 +22,7 @@ namespace TwentyDeka
         }
     }
 
-    class InvalidSellerBranchIdException : Exception
+    public class InvalidSellerBranchIdException : Exception
     {
         public InvalidSellerBranchIdException(string message)
             : base(message)
@@ -30,7 +30,7 @@ namespace TwentyDeka
         }
     }
 
-    class PurchaseReceiptUploadException : Exception
+    public class PurchaseReceiptUploadException : Exception
     {
         public PurchaseReceiptUploadException(string message)
             : base(message)
