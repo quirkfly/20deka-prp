@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.IO;
 using System.Drawing;
+using System.Resources;
 
 using RestSharp;
 using QRCoder;
@@ -20,6 +21,8 @@ namespace TwentyDeka
 
         public const int SELLER_DOES_NOT_EXIST = 53;
         public const int SELLER_BRANCH_DOES_NOT_EXIST = 77;
+
+        private static Bitmap twentyDekaLogo;
 
         public PurchaseResult Process(PurchaseReceipt purchaseReceipt)
         {
@@ -42,7 +45,7 @@ namespace TwentyDeka
                 QRCode qrCode = new QRCode(qrCodeData);
 
                 return new PurchaseResult(!purchaseReceiptUploadResponse.isLinkedWithHousehold ?
-                    qrCode.GetGraphic(20, Color.Black, Color.White, new Bitmap(Image.FromFile("C:\\tmp\\ic_launcher.png"))) : null);
+                    qrCode.GetGraphic(20, Color.Black, Color.White, getTwentyDekaLogo()) : null);
             }
             else if (purchaseReceiptUploadResponse.status == SELLER_DOES_NOT_EXIST)
             {
@@ -56,6 +59,16 @@ namespace TwentyDeka
             {
                 throw new PurchaseReceiptUploadException(String.Format("Failed to upload purchase receipt, status: {0}", purchaseReceiptUploadResponse.status));
             }
+        }
+
+        public static Bitmap getTwentyDekaLogo()
+        {
+            if (twentyDekaLogo == null)
+            {
+                twentyDekaLogo = new Bitmap(Properties.Resources.twentydeka_logo);
+            }
+
+            return twentyDekaLogo;
         }
     }
 
