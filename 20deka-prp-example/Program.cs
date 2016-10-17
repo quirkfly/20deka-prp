@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using TwentyDeka;
 
 namespace Example
@@ -11,20 +12,25 @@ namespace Example
     {
         static void Main(string[] args)
         {
-            PurchaseReceipt purchaseReceipt = new PurchaseReceipt(1, 1);
-            purchaseReceipt.customerCardId = "63400950019900345";
-
-            for (ushort i = 1; i < 150; i++)
+            try
             {
-                purchaseReceipt.Add(new PurchaseItem(i.ToString(), i));
+                PurchaseReceipt purchaseReceipt = new PurchaseReceipt(1, 1);
+                purchaseReceipt.customerCardId = "63400950019900345";
+                purchaseReceipt.Add(new PurchaseItem("2002120307521", 1));
+                purchaseReceipt.Add(new PurchaseItem("2002006255673", 2));
+                purchaseReceipt.Add(new PurchaseItem("2002120712588", 2));
+
+                PurchaseReceiptProcessor purchaseReceiptProcessor = new PurchaseReceiptProcessor();
+                PurchaseResult purchaseResult = purchaseReceiptProcessor.Process(purchaseReceipt);
+
+                if (purchaseResult.purchaseQRCode != null)
+                {
+                    purchaseResult.purchaseQRCode.Save("c:\\temp\\purchase_qrcode.png");
+                }
             }
-
-            PurchaseReceiptProcessor purchaseReceiptProcessor = new PurchaseReceiptProcessor();
-            PurchaseResult purchaseResult = purchaseReceiptProcessor.Process(purchaseReceipt);
-
-            if (purchaseResult.purchaseQRCode != null)
+            catch (Exception e)
             {
-                purchaseResult.purchaseQRCode.Save("c:\\tmp\\qrcode.png");
+                Console.WriteLine("An error occurred: '{0}'", e);
             }
         }
     }
