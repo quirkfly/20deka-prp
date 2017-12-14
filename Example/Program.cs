@@ -22,10 +22,12 @@ namespace Example
             PurchaseReceiptProcessor purchaseReceiptProcessor = new PurchaseReceiptProcessor();
             PurchaseResult purchaseResult = purchaseReceiptProcessor.Process(purchaseReceipt);
 
+            /*
             if (purchaseResult.purchaseQRCode != null)
             {
                 purchaseResult.purchaseQRCode.Save("c:\\tmp\\qrcode.png");
             }
+             */
         }
     }
 }

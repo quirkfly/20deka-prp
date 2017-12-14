@@ -17,7 +17,11 @@ namespace TwentyDeka
 {
     public class PurchaseReceiptProcessor
     {
-        public const string BASE_URL = "https://20deka.com";
+        #if DEBUG
+            public const string BASE_URL = "https://9173bcbe.ngrok.io";
+        #else
+            public const string BASE_URL = "https://20deka.com";       
+        #endif
 
         public const int SELLER_DOES_NOT_EXIST = 53;
         public const int SELLER_BRANCH_DOES_NOT_EXIST = 77;
@@ -28,9 +32,10 @@ namespace TwentyDeka
         {
             var restClient = new RestClient(BASE_URL);
 
-            var request = new RestRequest("/purchase-receipt/upload", Method.POST);
+            var request = new RestRequest(String.Format("/api/v1/seller/pos/{0}/{1}/receipts/upload", purchaseReceipt.sellerId.ToString(),
+                purchaseReceipt.sellerBranchId.ToString()), Method.POST);
             request.AddParameter("customer_card_id", purchaseReceipt.customerCardId);
-            request.AddParameter("payload", purchaseReceipt.ToString());
+            request.AddParameter("payload", purchaseReceipt.ToJson());
 
             IRestResponse response = restClient.Execute(request);
             MemoryStream responseStream = new MemoryStream(Encoding.UTF8.GetBytes(response.Content));

@@ -1,16 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TwentyDeka
 {
-    public class PurchaseReceipt
+    [DataContract]
+    public class PurchaseReceipt : IPurchasable
     {
+        [DataMember]
         public uint sellerId { get; set; }
+
+        [DataMember]
         public uint sellerBranchId { get; set; }
+
+        [DataMember]
         public string customerCardId { get; set; }
+
+        [DataMember]
         private Dictionary<string, ushort> purchaseItems;
 
         public PurchaseReceipt(uint sellerId, uint sellerBranchId)
@@ -43,6 +54,18 @@ namespace TwentyDeka
             }
 
             return purchaseReceipt;
+        }
+
+        public string ToJson()
+        {
+            DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(PurchaseReceipt));
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                jsonSerializer.WriteObject(ms, this);
+
+                return Encoding.Default.GetString(ms.ToArray());
+            }
         }
     }
 }
