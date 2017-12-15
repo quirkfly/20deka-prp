@@ -18,7 +18,7 @@ namespace TwentyDeka
     public class PurchaseReceiptProcessor
     {
         #if DEBUG
-            public const string BASE_URL = "https://9173bcbe.ngrok.io";
+            public const string BASE_URL = "https://2aa3db95.ngrok.io";
         #else
             public const string BASE_URL = "https://20deka.com";       
         #endif
@@ -26,16 +26,23 @@ namespace TwentyDeka
         public const int SELLER_DOES_NOT_EXIST = 53;
         public const int SELLER_BRANCH_DOES_NOT_EXIST = 77;
 
+        private string accessToken;
         private static Bitmap twentyDekaLogo;
+
+        public PurchaseReceiptProcessor(string accessToken)
+        {
+            this.accessToken = accessToken;
+        }
 
         public PurchaseResult Process(PurchaseReceipt purchaseReceipt)
         {
             var restClient = new RestClient(BASE_URL);
 
-            var request = new RestRequest(String.Format("/api/v1/seller/pos/{0}/{1}/receipts/upload", purchaseReceipt.sellerId.ToString(),
-                purchaseReceipt.sellerBranchId.ToString()), Method.POST);
-            request.AddParameter("customer_card_id", purchaseReceipt.customerCardId);
-            request.AddParameter("payload", purchaseReceipt.ToJson());
+            var request = new RestRequest(String.Format("/api/v1/seller/pos/{0}/{1}/receipts/upload", purchaseReceipt.merchantId,
+                purchaseReceipt.merchantBranchId), Method.POST);
+            request.AddHeader("Authorization", String.Format("Bearer {0}", this.accessToken));
+            request.AddParameter("customerCardId", purchaseReceipt.customerCardId);
+            request.AddParameter("purchaseItems", purchaseReceipt.ToJson());
 
             IRestResponse response = restClient.Execute(request);
             MemoryStream responseStream = new MemoryStream(Encoding.UTF8.GetBytes(response.Content));
@@ -45,20 +52,21 @@ namespace TwentyDeka
 
             if (purchaseReceiptUploadResponse.status == 0)
             {
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(String.Format("{0}/prp/{1}", BASE_URL, purchaseReceiptUploadResponse.path), QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
+                //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                //QRCodeData qrCodeData = qrGenerator.CreateQrCode(String.Format("{0}/prp/{1}", BASE_URL, purchaseReceiptUploadResponse.path), QRCodeGenerator.ECCLevel.Q);
+                //QRCode qrCode = new QRCode(qrCodeData);
 
-                return new PurchaseResult(!purchaseReceiptUploadResponse.isLinkedWithHousehold ?
-                    qrCode.GetGraphic(20, Color.Black, Color.White, getTwentyDekaLogo()) : null);
+                //return new PurchaseResult(!purchaseReceiptUploadResponse.isLinkedWithHousehold ?
+                //    qrCode.GetGraphic(20, Color.Black, Color.White, getTwentyDekaLogo()) : null);
+                return new PurchaseResult(null);
             }
             else if (purchaseReceiptUploadResponse.status == SELLER_DOES_NOT_EXIST)
             {
-                throw new InvalidSellerIdException(String.Format("Seller id {0} does not exist.", purchaseReceipt.sellerId));
+                throw new InvalidSellerIdException(String.Format("Merchant id {0} does not exist.", purchaseReceipt.merchantId));
             }
             else if (purchaseReceiptUploadResponse.status == SELLER_BRANCH_DOES_NOT_EXIST)
             {
-                throw new InvalidSellerBranchIdException(String.Format("Seller branch id {0} does not exist.", purchaseReceipt.sellerId));
+                throw new InvalidSellerBranchIdException(String.Format("Merchant branch id {0} does not exist.", purchaseReceipt.merchantBranchId));
             }
             else
             {
@@ -86,11 +94,8 @@ namespace TwentyDeka
         [DataMember(Name = "msg")]
         public string msg { get; set; }
 
-        [DataMember(Name = "path")]
-        public string path { get; set; }
-
-        [DataMember(Name = "is_linked_with_household")]
-        public bool isLinkedWithHousehold { get; set; }
+        [DataMember(Name = "receiptEANUrl")]
+        public string receiptEANUrl { get; set; }
     }
 
 }

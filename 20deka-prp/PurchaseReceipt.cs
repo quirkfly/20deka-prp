@@ -13,10 +13,10 @@ namespace TwentyDeka
     public class PurchaseReceipt : IPurchasable
     {
         [DataMember]
-        public uint sellerId { get; set; }
+        public string merchantId { get; set; }
 
         [DataMember]
-        public uint sellerBranchId { get; set; }
+        public uint merchantBranchId { get; set; }
 
         [DataMember]
         public string customerCardId { get; set; }
@@ -24,10 +24,10 @@ namespace TwentyDeka
         [DataMember]
         private Dictionary<string, ushort> purchaseItems;
 
-        public PurchaseReceipt(uint sellerId, uint sellerBranchId)
+        public PurchaseReceipt(string merchantId, uint merchantBranchId)
         {
-            this.sellerId = sellerId;
-            this.sellerBranchId = sellerBranchId;
+            this.merchantId = merchantId;
+            this.merchantBranchId = merchantBranchId;
             this.purchaseItems = new Dictionary<string, ushort>();
         }
 
@@ -46,8 +46,8 @@ namespace TwentyDeka
         override
         public string ToString()
         {
-            string purchaseReceipt = String.Format("{0}{1}", this.sellerId.ToString().PadLeft(10, '0'), this.sellerBranchId.ToString().PadLeft(10, '0'));
-            purchaseReceipt += String.Format("{0}{1}", this.sellerId.ToString().PadLeft(10, '0'), this.sellerBranchId.ToString().PadLeft(10, '0'));
+            string purchaseReceipt = String.Format("{0}{1}", this.merchantBranchId.ToString().PadLeft(10, '0'), this.merchantBranchId.ToString().PadLeft(10, '0'));
+            purchaseReceipt += String.Format("{0}{1}", this.merchantId.PadLeft(10, '0'), this.merchantBranchId.ToString().PadLeft(10, '0'));
             foreach (KeyValuePair<string, ushort> purchaseItem in this.purchaseItems)
             {
                 purchaseReceipt += String.Format("{0}{1}", purchaseItem.Key, purchaseItem.Value.ToString().PadLeft(3, '0'));
