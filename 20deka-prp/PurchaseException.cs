@@ -14,25 +14,25 @@ namespace TwentyDeka
         }
     }
 
-    public class InvalidSellerIdException : Exception
+    public class InvalidMerchantException : Exception
     {
-        public InvalidSellerIdException(string message)
+        public InvalidMerchantException(string message)
             : base(message)
         {
         }
     }
 
-    public class InvalidSellerBranchIdException : Exception
+    public class InvalidMerchantBranchException : Exception
     {
-        public InvalidSellerBranchIdException(string message)
+        public InvalidMerchantBranchException(string message)
             : base(message)
         {
         }
     }
 
-    public class PurchaseReceiptUploadException : Exception
+    public class PurchaseReceiptException : Exception
     {
-        public PurchaseReceiptUploadException(string message)
+        public PurchaseReceiptException(string message)
             : base(message)
         {
         }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using TwentyDeka;
 
 namespace Example
@@ -26,11 +26,9 @@ namespace Example
 
                 PurchaseReceiptProcessor purchaseReceiptProcessor = new PurchaseReceiptProcessor(accessToken);
                 PurchaseResult purchaseResult = purchaseReceiptProcessor.Process(purchaseReceipt);
-
-                if (purchaseResult.purchaseQRCode != null)
-                {
-                    purchaseResult.purchaseQRCode.Save("c:\\temp\\purchase_qrcode.png");
-                }
+                Bitmap receiptEAN = purchaseResult.GetReceiptEAN();
+                receiptEAN.Save("c:\\temp\\receipt_ean.png");
+                Bitmap logo = PurchaseResult.GetTwentyDekaLogo();
             }
             catch (Exception e)
             {
